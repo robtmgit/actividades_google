@@ -8,3 +8,4 @@ JOIN
   `practicas-sql-roberto.warehouse_orders.Warehouse` AS warehouse
 ON
   orders.id_deposito = warehouse.`id_depósito`
+
