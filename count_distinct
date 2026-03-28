@@ -1,0 +1,8 @@
+SELECT 
+  COUNT(DISTINCT warehouse.estado) AS num_states
+FROM 
+  `practicas-sql-roberto.warehouse_orders.Orders` AS orders
+JOIN 
+  `practicas-sql-roberto.warehouse_orders.Warehouse` AS warehouse 
+ON 
+  orders.id_deposito = warehouse.`id_depósito` #USAMOS ` CUANDO HAYA ERROR DE CARACTERES, COMO EN "DEP-SITO" EN LA TABLA
