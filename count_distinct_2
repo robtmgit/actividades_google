@@ -1,0 +1,11 @@
+SELECT
+  warehouse.estado AS state,
+  COUNT(DISTINCT orders.id_pedido) AS num_orders
+FROM
+  `practicas-sql-roberto.warehouse_orders.Orders` AS orders
+JOIN
+  `practicas-sql-roberto.warehouse_orders.Warehouse` AS warehouse
+ON
+  orders.id_deposito = warehouse.`id_depósito` #--REPETIMOS LAS COMILLAS INVERTIDAS
+GROUP BY
+  warehouse.estado
