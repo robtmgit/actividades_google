@@ -1,0 +1,66 @@
+
+SELECT 
+Warehouse.`id_depósito`,
+CONCAT(Warehouse.estado, ': ', Warehouse.`alias_depósito`) AS warehouse_name, 
+COUNT(Orders.`id_pedido`) AS number_of_orders,
+(SELECT
+  COUNT(*)
+  FROM warehouse_orders.Orders Orders)
+  AS total_orders,
+  CASE 
+  WHEN COUNT(Orders.`id_pedido`)/(SELECT COUNT(*) FROM warehouse_orders.Orders Orders) <= 0.20
+  THEN "FULFILLED 0-20% OF ORDERS"
+   WHEN COUNT(Orders.`id_pedido`)/(SELECT COUNT(*) FROM warehouse_orders.Orders Orders) > 0.20
+   AND COUNT(Orders.`id_pedido`)/(SELECT COUNT(*) FROM warehouse_orders.Orders Orders) <= 0.60
+   THEN "Fulfilled 21-60% of Orders"
+   ELSE "Fulfilled more than 60% of orders"
+   END AS fulfillment_summary
+
+FROM `practicas-sql-roberto.warehouse_orders.Warehouse` AS Warehouse
+LEFT JOIN `practicas-sql-roberto.warehouse_orders.Orders` AS Orders
+ON Orders.`id_deposito` = Warehouse.`id_depósito`
+GROUP BY
+Warehouse.`id_depósito`,
+warehouse_name
+
+HAVING 
+  COUNT(Orders.id_pedido) > 0
+
+###Gemini ha dicho
+Este query es como un generador de reportes de desempeño. Toma la lista de tus almacenes y calcula qué porcentaje de las ventas totales de la empresa le corresponde a cada uno.
+
+Aquí tienes el desglose "traducido" a lenguaje humano:
+
+1. El cálculo de participación (El corazón del query)
+SQL
+COUNT(Orders.id_pedido) / (SELECT COUNT(*) FROM `...Orders`)
+Esta es una operación matemática simple:
+
+Arriba: Cuenta cuántos pedidos tiene este almacén en particular.
+
+Abajo: Hace una mini-consulta para saber cuántos pedidos tiene la empresa entera.
+
+Resultado: Un número decimal (ej. 0.15) que representa el porcentaje de participación.
+
+2. La clasificación con CASE
+Imagina que tienes etiquetas adhesivas y las vas pegando según el resultado anterior:
+
+Si es 0.20 o menos: Pegas la etiqueta "FULFILLED 0-20%".
+
+Si es hasta 0.60: Pegas "Fulfilled 21-60%".
+
+Si es más: Pegas "More than 60%".
+Esto sirve para que el jefe o el cliente no vea números complejos, sino una categoría clara.
+
+3. El uso del LEFT JOIN
+SQL
+FROM ...Warehouse AS Warehouse
+LEFT JOIN ...Orders AS Orders
+Usamos LEFT JOIN para asegurar que aparezcan todos tus almacenes, incluso si alguno no ha tenido ninguna venta todavía. Si usáramos un join normal, los almacenes sin ventas desaparecerían del reporte.
+
+4. La limpieza con HAVING
+SQL
+HAVING COUNT(Orders.id_pedido) > 0
+Al final, le dices a SQL: "Después de calcular todo, solo muéstrame los almacenes que tengan al menos 1 pedido". Esto limpia el reporte de almacenes nuevos o inactivos que no te interesan para este análisis de rendimiento.
+
+En resumen: Estás creando una tabla que dice: "El almacén de Tuxtla (por ejemplo) tiene 50 pedidos, lo que representa el 15% del total, por lo tanto, está en la categoría de 0-20%".
