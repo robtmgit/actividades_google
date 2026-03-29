@@ -1,0 +1,24 @@
+SELECT
+  station_id,
+  name
+FROM
+  `bigquery-public-data.new_york.citibike_stations`
+WHERE
+  station_id IN (
+    SELECT
+      CAST(start_station_id AS STRING)
+    FROM
+      `bigquery-public-data.new_york.citibike_trips`
+    WHERE
+      usertype = 'Subscriber'
+  )
+
+
+  ###Busca en la tabla de viajes.
+Filtra para quedarse solo con los viajes de usuarios tipo 'Subscriber'.
+Crea una lista con todos los IDs de las estaciones donde esos usuarios empezaron su recorrido.
+CAST: Convierte los números en texto para que "hablen el mismo idioma" que la otra tabla.
+Ahora vamos a la tabla de estaciones (donde están los nombres).
+Le decimos a SQL: "Muéstrame el ID y el Nombre de la estación, SIEMPRE Y CUANDO su ID esté en la lista que acabamos de generar arriba".
+JOIN (El anterior): Es como pegar dos tablas de lado a lado para combinar toda su información (nombres + conteos).
+IN (Este): Es como un buscador. Solo te dice qué estaciones cumplen el requisito de haber sido usadas por suscriptores, pero no te dice cuántas veces ni mezcla los datos de ambas tablas.
