@@ -16,3 +16,13 @@ INNER JOIN
   ON station_id = start_station_id_str
 ORDER BY
   number_of_rides DESC
+
+### COUNT(*): Cuenta cuántas veces aparece cada estación en la tabla de viajes.
+GROUP BY: Agrupa los millones de registros por el ID de la estación para que el conteo sea individual.
+CAST(... AS STRING): ¡Vital! Como te dio error antes, aquí convertimos el número de ID en "texto" para que sea compatible con la otra tabla.
+AS station_num_trips: Le ponemos un apodo a todo este resultado temporal para poder usarlo después.
+
+El INNER JOIN busca coincidencias exactas. Si un ID existe en ambas listas, "pega" las filas horizontalmente.
+La condición ON le dice a SQL: "Busca donde el ID de la tabla de estaciones sea igual al ID que acabamos de convertir en la subconsulta".
+Elegimos el ID, el nombre (que viene de la tabla de estaciones) y el conteo (que viene de la subconsulta).
+DESC: Ordena los resultados de mayor a menor (Descending). Así, las estaciones más populares aparecen hasta arriba.
