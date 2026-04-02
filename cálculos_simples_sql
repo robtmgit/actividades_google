@@ -1,0 +1,22 @@
+SELECT  
+  Date,
+  region, -- En tu esquema aparece en minúsculas
+  `Small Bags`,
+  `Large Bags`,
+  `XLarge Bags`,
+  `Total Bags`,
+  (`Small Bags` + `Large Bags` + `XLarge Bags`) AS Total_Bags_Calc
+FROM `practicas-sql-roberto.avocado_data.avocado_prices`
+
+
+
+SELECT  
+  Date,
+  region, -- En tu esquema aparece en minúsculas
+  `Small Bags`,
+  `Total Bags`,
+  (`Small Bags` / `Total Bags`)*100 AS Small_Bags_Percent
+  
+  FROM `practicas-sql-roberto.avocado_data.avocado_prices`
+  WHERE 
+  `Total Bags` != 0
